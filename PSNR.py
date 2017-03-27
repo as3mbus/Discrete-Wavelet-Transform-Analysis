@@ -9,22 +9,27 @@ def MSE(image1,image2):
     x = np.float(1)
     # print x
     x = x/(height*width)
-    print x
+    # print x
     for a in range(height):
         for b in range(width):
             mse += pow((image1[a,b]-image2[a,b]),2)
             # print str(image1[a,b]) + " - " + str(image1[a,b])
-    print mse
+    # print mse
     mse = mse*x
-    print mse
-    return mse;
+    # print mse
+    # print 10*np.log10(math.pow(255,2)/mse)
+    return mse, 10*np.log10(math.pow(255,2)/mse)
+
+
 
 
 if __name__ == '__main__':
     image1=cv2.imread("index.jpeg")
     image2=cv2.imread("indexD.jpeg")
-    MSE(image1,image2)
+    MSE,PSNR = MSE(image1,image2)
     # print glcm
+    print "MSE = "+ str(MSE)
+    print "PSNR = "+ str(PSNR)
 
     cv2.imshow("testing",image1)
     cv2.imwrite("a.jpeg",image1)
