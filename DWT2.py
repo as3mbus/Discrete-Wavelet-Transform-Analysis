@@ -4,10 +4,10 @@ import sys
 import os
 
 
-def main(img):
+if __name__ == '__main__':
 
     #loadImage & copy image
-    image = cv2.imread(img)
+    image = cv2.imread(sys.argv[1])
     height, width= image.shape[:2]
 
     image2, imArray2 =waveleteTransform(image,width,height)
@@ -17,17 +17,18 @@ def main(img):
     cv2.imshow('base Image',image)
     cv2.imshow('DWT',image2)
     cv2.imshow('result4',image3)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+
     a,ext=os.path.splitext(os.path.basename(sys.argv[1]))
     a=a+"D"
     print a
     b=a+ext
     print b
-    cv2.imwrite(b,image3)
-
+    cv2.imwrite('/tmp/image3.jpeg',image3)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def waveleteTransform(img,width,height):
+    print(img)
     image=img.astype(np.int)
     result = np.zeros((height,width,3), np.int)
 
@@ -89,6 +90,3 @@ def inverseWaveleteTransform(img,nc,nr):
 
     resultimg=result.astype(np.uint8)
     return resultimg, result;
-
-
-main(sys.argv[1])

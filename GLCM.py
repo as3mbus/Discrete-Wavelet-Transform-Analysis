@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-# import sys
+import sys
 import math
 
 
@@ -75,26 +75,28 @@ def tao(glcm,meanI,meanJ):
         taoJ[i]=math.sqrt(taoJ[i])
     return taoI, taoJ
 
+def rgb2gs(rgb):
+    val = 0.114 * (rgb[0]) + 0.587 * (rgb[1]) + 0.299 * (rgb[2])
+    return val
+
 if __name__ == '__main__':
-    image=cv2.imread("tes.jpeg")
+    image=cv2.imread(sys.argv[1])
     height,width = image.shape[:2]
     glcm=GLCM(image,height,width,0,1)
     imglcm=glcm.astype(np.uint8)
     kontras, meanI, meanJ, energy, homogenity=contrast(glcm)
     taoI, taoJ=tao(glcm,meanI,meanJ)
     korelasion=correlation(glcm,meanI,meanJ,taoI,taoJ)
-    print "meanI = " + str(meanI)
-    print "meanJ = " + str(meanJ)
-    print "taoI = " + str(taoI)
-    print "taoJ = " + str(taoJ)
-    print "kontras = " +  str(kontras)
-    print "Energy = " +  str(energy)
-    print "Homogenitas = " +  str(homogenity)
-    print "Correlation = " + str(korelasion)
+    print "meanI = " + str(rgb2gs(meanI))
+    print "meanJ = " + str(rgb2gs(meanJ))
+    print "taoI = " + str(rgb2gs(taoI))
+    print "taoJ = " + str(rgb2gs(taoJ))
+    print "kontras = " +  str(rgb2gs(kontras))
+    print "Energy = " +  str(rgb2gs(energy))
+    print "Homogenitas = " +  str(rgb2gs(homogenity))
+    print "Correlation = " + str(rgb2gs(korelasion))
     # print glcm
 
     cv2.imshow("testing",imglcm)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-
