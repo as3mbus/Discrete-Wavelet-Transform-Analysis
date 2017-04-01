@@ -59,13 +59,13 @@ def tao(glcm,meanI,meanJ):
     taoJ=np.zeros(3, np.float)
     for i in range(256):
         for j in range(256):
-            taoI[0]=pow(i-meanI[0],2) * glcm[i,j,0]
-            taoI[1]=pow(i-meanI[1],2) * glcm[i,j,1]
-            taoI[2]=pow(i-meanI[2],2) * glcm[i,j,2]
-            taoJ[0]=pow(j-meanJ[0],2) * glcm[i,j,0]
-            taoJ[1]=pow(j-meanJ[1],2) * glcm[i,j,1]
-            taoJ[2]=pow(j-meanJ[2],2) * glcm[i,j,2]
-            # print str(pow(j-meanJ[1],2)) + " x " + str(glcm[i,j,1])
+            taoI[0]+=pow(i-meanI[0],2) * glcm[i,j,0]
+            taoI[1]+=pow(i-meanI[1],2) * glcm[i,j,1]
+            taoI[2]+=pow(i-meanI[2],2) * glcm[i,j,2]
+            taoJ[0]+=pow(j-meanJ[0],2) * glcm[i,j,0]
+            taoJ[1]+=pow(j-meanJ[1],2) * glcm[i,j,1]
+            taoJ[2]+=pow(j-meanJ[2],2) * glcm[i,j,2]
+            # print str(taoJ[2])+" = "+ str(pow(j-meanJ[2],2)) + " x " + str(glcm[i,j,2])
     # print "taoi = "
     # print taoI
     # print "taoj = "

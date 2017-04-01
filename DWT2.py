@@ -28,7 +28,7 @@ if __name__ == '__main__':
     cv2.destroyAllWindows()
 
 def waveleteTransform(img,width,height):
-    print(img)
+    # print(img)
     image=img.astype(np.int)
     result = np.zeros((height,width,3), np.int)
 

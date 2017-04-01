@@ -1,19 +1,17 @@
 import gi
-import numpy as np
-import cv2
-import sys
-import os
+
+from DWT2 import *
 from GLCM import *
 from PSNR import *
-from DWT2 import *
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 
-gi.require_version('Gtk','3.0')
-from gi.repository import Gtk , GdkPixbuf, GLib
 class MyWindow(Gtk.Window):
 
     def __init__(self):
-        Gtk.Window.__init__(self, title="Watermarking")
+        Gtk.Window.__init__(self, title="DWTGLCMPSNR")
         self.set_border_width(10)
         self.set_default_size(400,200)
 
@@ -36,9 +34,9 @@ class MyWindow(Gtk.Window):
         self.imgbuffer.set_text("")
         self.img.set_can_focus(0)
         box2.pack_start(self.img,1,1,10)
-        filechooser = Gtk.Button(label="click here")
+        filechooser = Gtk.Button(label="...")
         filechooser.connect("clicked",self.on_image_clicked)
-        box2.pack_start(filechooser,1,1,5)
+        box2.pack_start(filechooser,0,0,5)
         bttndwt = Gtk.Button(label="DWT")
         bttndwt.connect("clicked",self.on_bttndwt_clicked)
         box1.pack_start(bttndwt,1,1,10)
@@ -53,14 +51,13 @@ class MyWindow(Gtk.Window):
         cv2.imwrite('/tmp/awal.jpeg',image)
         cv2.imwrite('/tmp/prosesdwt.jpeg',image2)
         cv2.imwrite('/tmp/resultdwt.jpeg',image3)
-        image3 = cv2.imread('/tmp/resultdwt.jpeg')
         show = Gtk.Window()
         headerBar = Gtk.HeaderBar()
         headerBar.set_show_close_button(True)
         show.set_border_width(10)
         show.set_default_size(400,200)
         vboxP = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vboxP)
+        # self.add(vboxP)
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         vboxP.pack_start(hbox,1,1,10)
         loadawal = Gtk.Image.new_from_file('/tmp/awal.jpeg')
@@ -79,14 +76,17 @@ class MyWindow(Gtk.Window):
         kontrasaw, meanIaw, meanJaw, energyaw, homogenityaw = contrast(glcmaw)
         taoIaw, taoJaw = tao(glcmaw,meanIaw,meanJaw)
         korelasionaw = correlation(glcmaw,meanIaw,meanJaw,taoIaw,taoJaw)
-        print "meanI = " + str(rgb2gs(meanIaw))
-        print "meanJ = " + str(rgb2gs(meanJaw))
-        print "taoI = " + str(rgb2gs(taoIaw))
-        print "taoJ = " + str(rgb2gs(taoJaw))
-        print "kontras = " +  str(rgb2gs(kontrasaw))
-        print "Energy = " +  str(rgb2gs(energyaw))
-        print "Homogenitas = " +  str(rgb2gs(homogenityaw))
-        print "Correlation = " + str(rgb2gs(korelasionaw))
+
+        # print "meanI = " + str(rgb2gs(meanIaw))
+        # print "meanJ = " + str(rgb2gs(meanJaw))
+        # print "taoI = " + str(rgb2gs(taoIaw))
+        # print "taoJ = " + str(rgb2gs(taoJaw))
+        # print "kontras = " +  str(rgb2gs(kontrasaw))
+        # print "Energy = " +  str(rgb2gs(energyaw))
+        # print "Homogenitas = " +  str(rgb2gs(homogenityaw))
+        # print "Correlation = " + str(rgb2gs(korelasionaw))
+        #
+
         gskontrasaw = rgb2gs(kontrasaw)
         gsenergyaw = rgb2gs(energyaw)
         gshomogenityaw = rgb2gs(homogenityaw)
@@ -100,14 +100,19 @@ class MyWindow(Gtk.Window):
         gsenergy = rgb2gs(energy)
         gshomogenity = rgb2gs(homogenity)
         gskorelasi = rgb2gs(korelasion)
-        print "meanI = " + str(rgb2gs(meanI))
-        print "meanJ = " + str(rgb2gs(meanJ))
-        print "taoI = " + str(rgb2gs(taoI))
-        print "taoJ = " + str(rgb2gs(taoJ))
-        print "kontras = " +  str(rgb2gs(kontras))
-        print "Energy = " +  str(rgb2gs(energy))
-        print "Homogenitas = " +  str(rgb2gs(homogenity))
-        print "Correlation = " + str(rgb2gs(korelasion))
+
+
+
+        # print "meanI = " + str(rgb2gs(meanI))
+        # print "meanJ = " + str(rgb2gs(meanJ))
+        # print "taoI = " + str(rgb2gs(taoI))
+        # print "taoJ = " + str(rgb2gs(taoJ))
+        # print "kontras = " +  str(rgb2gs(kontras))
+        # print "Energy = " +  str(rgb2gs(energy))
+        # print "Homogenitas = " +  str(rgb2gs(homogenity))
+        # print "Correlation = " + str(rgb2gs(korelasion))
+        #
+
         #PSNR
 
         imagePSNR1=cv2.imread("/tmp/awal.jpeg")
@@ -267,8 +272,10 @@ class MyWindow(Gtk.Window):
         filter_any.set_name("Any files")
         filter_any.add_pattern("*")
         dialog.add_filter(filter_any)
-win = MyWindow()
 
-win.connect("delete-event",Gtk.main_quit)
-win.show_all()
-Gtk.main()
+if __name__ == '__main__':
+    win = MyWindow()
+
+    win.connect("delete-event", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
