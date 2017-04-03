@@ -45,7 +45,7 @@ def waveleteTransform(img,width,height):
 
     #copy array
     image=np.copy(result)
-
+    
     # Vertical processing:
     height2 = height/2;
     for i in range(0,height-1,2):

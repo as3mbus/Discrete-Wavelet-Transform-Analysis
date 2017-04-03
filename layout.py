@@ -6,7 +6,7 @@ from PSNR import *
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-
+from gi.repository import GLib
 
 class MyWindow(Gtk.Window):
 
@@ -25,29 +25,36 @@ class MyWindow(Gtk.Window):
 
         self.loadimg = Gtk.Image.new_from_file('')
         self.loadimg.set_pixel_size(200)
-        box1.pack_start(self.loadimg,1,1,20)
+        box1.pack_start(self.loadimg,1,1,10)
         box2 = Gtk.Box(orientation= Gtk.Orientation.HORIZONTAL)
-        box1.pack_start(box2,1,1,0)
+        box1.pack_start(box2,1,1,10)
         self.imgbuffer = Gtk.TextBuffer()
         self.img = Gtk.TextView()
         self.img.set_buffer(self.imgbuffer)
         self.imgbuffer.set_text("")
         self.img.set_can_focus(0)
         box2.pack_start(self.img,1,1,10)
+
         filechooser = Gtk.Button(label="...")
         filechooser.connect("clicked",self.on_image_clicked)
         box2.pack_start(filechooser,0,0,5)
-        bttndwt = Gtk.Button(label="DWT")
+        self.progress_bar= Gtk.ProgressBar()
+        box1.pack_start(self.progress_bar,1,1,0)
+        bttndwt = Gtk.Button(label="Analisa")
         bttndwt.connect("clicked",self.on_bttndwt_clicked)
-        box1.pack_start(bttndwt,1,1,10)
-
+        box1.pack_start(bttndwt,1,1,0)
 
     def on_bttndwt_clicked(self,widget):
         image = cv2.imread(self.imgbuffer.get_text(self.imgbuffer.get_iter_at_line(0),self.imgbuffer.get_iter_at_offset(-1),0))
         height, width= image.shape[:2]
         image2, imArray2 =waveleteTransform(image,width,height)
+        self.progress_bar.set_fraction(0.284760845)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         image3, imArray3=inverseWaveleteTransform(imArray2,width,height)
-
+        self.progress_bar.set_fraction(0.56952169)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         cv2.imwrite('/tmp/awal.jpeg',image)
         cv2.imwrite('/tmp/prosesdwt.jpeg',image2)
         cv2.imwrite('/tmp/resultdwt.jpeg',image3)
@@ -73,19 +80,22 @@ class MyWindow(Gtk.Window):
 
         # GLCM CITRA AWAL
         glcmaw=GLCM(image,height,width,0,1)
+        self.progress_bar.set_fraction(0.711902113)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         kontrasaw, meanIaw, meanJaw, energyaw, homogenityaw = contrast(glcmaw)
+        self.progress_bar.set_fraction(0.712458287)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         taoIaw, taoJaw = tao(glcmaw,meanIaw,meanJaw)
+        self.progress_bar.set_fraction(0.713014461)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         korelasionaw = correlation(glcmaw,meanIaw,meanJaw,taoIaw,taoJaw)
+        self.progress_bar.set_fraction(0.713570635)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
 
-        # print "meanI = " + str(rgb2gs(meanIaw))
-        # print "meanJ = " + str(rgb2gs(meanJaw))
-        # print "taoI = " + str(rgb2gs(taoIaw))
-        # print "taoJ = " + str(rgb2gs(taoJaw))
-        # print "kontras = " +  str(rgb2gs(kontrasaw))
-        # print "Energy = " +  str(rgb2gs(energyaw))
-        # print "Homogenitas = " +  str(rgb2gs(homogenityaw))
-        # print "Correlation = " + str(rgb2gs(korelasionaw))
-        #
 
         gskontrasaw = rgb2gs(kontrasaw)
         gsenergyaw = rgb2gs(energyaw)
@@ -93,25 +103,27 @@ class MyWindow(Gtk.Window):
         gskorelasiaw = rgb2gs(korelasionaw)
         # GLCM CITRA DWT
         glcm=GLCM(image3,height,width,0,1)
+        self.progress_bar.set_fraction(0.855951058)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         kontras, meanI, meanJ, energy, homogenity=contrast(glcm)
+        self.progress_bar.set_fraction(0.856507232)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         taoI, taoJ=tao(glcm,meanI,meanJ)
+        self.progress_bar.set_fraction(0.857063406)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         korelasion=correlation(glcm,meanI,meanJ,taoI,taoJ)
+        self.progress_bar.set_fraction(0.85761958)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         gskontras = rgb2gs(kontras)
         gsenergy = rgb2gs(energy)
         gshomogenity = rgb2gs(homogenity)
         gskorelasi = rgb2gs(korelasion)
 
 
-
-        # print "meanI = " + str(rgb2gs(meanI))
-        # print "meanJ = " + str(rgb2gs(meanJ))
-        # print "taoI = " + str(rgb2gs(taoI))
-        # print "taoJ = " + str(rgb2gs(taoJ))
-        # print "kontras = " +  str(rgb2gs(kontras))
-        # print "Energy = " +  str(rgb2gs(energy))
-        # print "Homogenitas = " +  str(rgb2gs(homogenity))
-        # print "Correlation = " + str(rgb2gs(korelasion))
-        #
 
         #PSNR
 
@@ -122,16 +134,6 @@ class MyWindow(Gtk.Window):
         gsmse = psnrrgb2gs(MSE)
         gspsnr = psnrrgb2gs(PSNR)
 
-
-
-        # labelkontras = Gtk.Label("Kontras = " + str(gskontras))
-        # vbox.pack_start(labelkontras,1,1,0)
-        # labelenergy = Gtk.Label("Energy = " + str(gsenergy))
-        # vbox.pack_start(labelenergy,1,1,0)
-        # labelhomogenity = Gtk.Label("Homogenitas = " + str(gshomogenity))
-        # vbox.pack_start(labelhomogenity,1,1,0)
-        # labelkorelasi = Gtk.Label("Korelasi = " + str(gskorelasion))
-        # vbox.pack_start(labelkorelasi,1,1,0)
         labelkosong = Gtk.Label(" ")
         hboxheader.pack_start(labelkosong,1,1,10)
         labeldwt = Gtk.Label("DWT")
@@ -245,9 +247,13 @@ class MyWindow(Gtk.Window):
         viewpsnrdwt.set_can_focus(0)
         hboxpsnr.pack_end(viewpsnrdwt,1,1,0)
 
+        self.progress_bar.set_fraction(1)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         show.add(vboxP)
         show.connect("delete-event",Gtk.main_quit)
         show.show_all()
+        self.progress_bar.set_fraction(0)
 
     def on_image_clicked(self, widget):
         dialog = Gtk.FileChooserDialog("Pilih Gambar ", self, Gtk.FileChooserAction.OPEN,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
