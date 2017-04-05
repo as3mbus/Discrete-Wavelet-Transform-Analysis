@@ -3,7 +3,7 @@ import gi
 from DWT2 import *
 from GLCM import *
 from PSNR import *
-
+from layout1 import *
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GLib
@@ -17,12 +17,6 @@ class MyWindow(Gtk.Window):
 
         box1 = Gtk.Box(orientation= Gtk.Orientation.VERTICAL)
         self.add(box1)
-
-        headerBar = Gtk.HeaderBar()
-        headerBar.set_show_close_button(True)
-        headerBar.props.title = "DWT"
-        self.set_titlebar(headerBar)
-
         self.loadimg = Gtk.Image.new_from_file('')
         self.loadimg.set_pixel_size(200)
         box1.pack_start(self.loadimg,1,1,10)

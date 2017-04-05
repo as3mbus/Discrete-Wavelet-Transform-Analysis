@@ -4,29 +4,6 @@ import sys
 import os
 
 
-if __name__ == '__main__':
-
-    #loadImage & copy image
-    image = cv2.imread(sys.argv[1])
-    height, width= image.shape[:2]
-
-    image2, imArray2 =waveleteTransform(image,width,height)
-
-    image3, imArray3=inverseWaveleteTransform(imArray2,width,height)
-
-    cv2.imshow('base Image',image)
-    cv2.imshow('DWT',image2)
-    cv2.imshow('result4',image3)
-
-    a,ext=os.path.splitext(os.path.basename(sys.argv[1]))
-    a=a+"D"
-    print a
-    b=a+ext
-    print b
-    cv2.imwrite('/tmp/image3.jpeg',image3)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
 def waveleteTransform(img,width,height):
     # print(img)
     image=img.astype(np.int)
@@ -45,7 +22,7 @@ def waveleteTransform(img,width,height):
 
     #copy array
     image=np.copy(result)
-    
+
     # Vertical processing:
     height2 = height/2;
     for i in range(0,height-1,2):
@@ -56,9 +33,16 @@ def waveleteTransform(img,width,height):
 
             result[i2,j] = (image[i,j] + image[i1,j])/2;
             result[height2+i2,j] = (image[i,j] - image[i1,j])/2;
-
     resultimg=result.astype(np.uint8)
-    return resultimg ,result
+    imgwater = cv2.imread("gambar.jpg")
+    imgwater = cv2.resize(imgwater,(width2,height2))
+    crop_result = result[0:height2,0:width2]
+    resultwater = (0.99*crop_result) + (0.05 *imgwater)
+    result[0:height2,0:width2]=resultwater
+    cv2.imshow("crop",crop_result)
+    cv2.imshow("tesss", resultimg)
+    cv2.waitKey(0)
+    return resultwater ,result
 
 
 def inverseWaveleteTransform(img,nc,nr):
@@ -72,8 +56,8 @@ def inverseWaveleteTransform(img,nc,nr):
             i1 = i+1
             i2 = i/2
 
-            result[i,j] = ((image[i2,j]/2) + (image[nr2+i2,j]/2))*2;
-            result[i1,j] = ((image[i2,j]/2) - (image[nr2+i2,j]/2))*2;
+            result[i,j] = ((image[i2,j]/2) + (image[nr2+i2,j]/2))*2
+            result[i1,j] = ((image[i2,j]/2) - (image[nr2+i2,j]/2))*2
 
     # //copy array
     image=np.copy(result)
@@ -83,10 +67,33 @@ def inverseWaveleteTransform(img,nc,nr):
     for i in range(0,nr) :
         for j in range(0,nc-1,2):
 
-            j1 = j+1;
-            j2 = j/2;
-            result[i,j] = ((image[i,j2]/2) + (image[i,j2+nc2]/2))*2;
-            result[i,j1] =((image[i,j2]/2) - (image[i,j2+nc2]/2))*2;
+            j1 = j+1
+            j2 = j/2
+            result[i,j] = ((image[i,j2]/2) + (image[i,j2+nc2]/2))*2
+            result[i,j1] =((image[i,j2]/2) - (image[i,j2+nc2]/2))*2
 
     resultimg=result.astype(np.uint8)
     return resultimg, result;
+
+if __name__ == '__main__':
+
+        #loadImage & copy image
+        image = cv2.imread(sys.argv[1])
+        height, width= image.shape[:2]
+
+        image2, imArray2 =waveleteTransform(image,width,height)
+
+        image3, imArray3=inverseWaveleteTransform(imArray2,width,height)
+
+        cv2.imshow('base Image',image)
+        cv2.imshow('DWT',image2)
+        cv2.imshow('result4',image3)
+
+        a,ext=os.path.splitext(os.path.basename(sys.argv[1]))
+        a=a+"D"
+        print a
+        b=a+ext
+        print b
+        cv2.imwrite('/tmp/image3.jpeg',image3)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
