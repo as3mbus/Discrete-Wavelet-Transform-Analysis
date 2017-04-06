@@ -1,39 +1,40 @@
 import numpy as np
 import cv2
-from DWT2 import *
-if __name__ == '__main__':
-    image = cv2.imread("index.jpeg")
-    height, width= image.shape[:2]
-    image2, imArray2 =waveleteTransform(image,width,height)
-    image3, imArray3=inverseWaveleteTransform(imArray2,width,height)
-    cv2.imshow("image",image3)
+def embed(imArray,imWater,x,y,w,h):
+    waterHeight,waterWidth=imWater.shape[:2]
+    if w<waterWidth or h<waterHeight:
+        if waterHeight>waterWidth:
+            print waterHeight/h
+            imWater = cv2.resize(imWater,(0,0), fx=float(h/waterHeight), fy=float(h/waterHeight))
+        else :
+            print  str(w) + "/" + str(waterWidth) +" = "+ str(float(w)/waterWidth)
+            imWater = cv2.resize(imWater,(0,0), fx = float(w)/waterWidth, fy = float(w)/waterWidth)
+
+        waterHeight,waterWidth=imWater.shape[:2]
+        crop_imArray = imArray[y:waterHeight+y,x:waterWidth+x]
+        resultWater = (0.5*crop_imArray) + (0.5 *imWater)
+        imArray[y:waterHeight+y,x:waterWidth+x]=resultWater
+    else :
+        crop_imArray = imArray[y:waterHeight+y,x:waterWidth+x]
+        resultWater = (0.5*crop_imArray) + (0.5 * imWater)
+        imArray[y:waterHeight+y,x:waterWidth+x]=resultWater
+    resultImgWater=resultWater.astype(np.uint8)
+    resultImgArray=imArray.astype(np.uint8)
+
+    cv2.imshow("crop",crop_imArray)
+    cv2.imshow("tesss", resultImgWater)
+    cv2.imshow("aaaaa", resultImgArray)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()
-def embed():
-    image = cv2.imread("index.jpeg")
-    height, width= image.shape[:2]
-    width2 = width/2;
-    for i in range(height):
-        for j in range(0,width-1,2):
+    return resultImgWater ,resultWater
 
-            j1 = j+1;
-            j2 = j/2;
-
-            result[i,j2] = (image[i,j] + image[i,j1])/2;
-            result[i,width2+j2] = (image[i,j] - image[i,j1])/2;
-
-    #copy array
-    image=np.copy(result)
-
-    # Vertical processing:
-    height2 = height/2;
-    for i in range(0,height-1,2):
-        for j in range(0,width):
-
-            i1 = i+1;
-            i2 = i/2;
-
-            result[i2,j] = (image[i,j] + image[i1,j])/2;
-            result[height2+i2,j] = (image[i,j] - image[i1,j])/2;
-    resultimg=result.astype(np.uint8)
-    return resultimg ,result
+if __name__ == '__main__':
+        image = cv2.imread("/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/Picture1.png")
+        imageWater = cv2.imread("/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/gambar.jpg")
+        height, width= image.shape[:2]
+        print "A"
+        # imWater = cv2.resize(imageWater,(0,0), fx = float(height/200), fy = float(height/200))
+        resultWater, resultImgWater = embed(image,imageWater,100,0,50,120)
+        # cv2.imshow("ori", imageWater)
+        # cv2.imshow("resiz", imWater)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()

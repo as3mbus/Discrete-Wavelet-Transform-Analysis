@@ -34,15 +34,7 @@ def waveleteTransform(img,width,height):
             result[i2,j] = (image[i,j] + image[i1,j])/2;
             result[height2+i2,j] = (image[i,j] - image[i1,j])/2;
     resultimg=result.astype(np.uint8)
-    imgwater = cv2.imread("gambar.jpg")
-    imgwater = cv2.resize(imgwater,(width2,height2))
-    crop_result = result[0:height2,0:width2]
-    resultwater = (0.99*crop_result) + (0.05 *imgwater)
-    result[0:height2,0:width2]=resultwater
-    cv2.imshow("crop",crop_result)
-    cv2.imshow("tesss", resultimg)
-    cv2.waitKey(0)
-    return resultwater ,result
+    return resultimg ,result
 
 
 def inverseWaveleteTransform(img,nc,nr):
