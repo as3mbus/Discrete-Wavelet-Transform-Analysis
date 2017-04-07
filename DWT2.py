@@ -4,14 +4,17 @@ import sys
 import os
 
 
-def waveleteTransform(img,width,height):
+def waveleteTransform(img):
+
     # print(img)
-    image=img.astype(np.int)
-    result = np.zeros((height,width,3), np.int)
+    image=img.astype(np.float)
+    height, width= image.shape[:2]
+    result = np.zeros((height,width,3), np.float)
 
     #Horizontal processing
     width2 = width/2;
     for i in range(height):
+
         for j in range(0,width-1,2):
 
             j1 = j+1;
@@ -34,12 +37,13 @@ def waveleteTransform(img,width,height):
             result[i2,j] = (image[i,j] + image[i1,j])/2;
             result[height2+i2,j] = (image[i,j] - image[i1,j])/2;
     resultimg=result.astype(np.uint8)
-    return resultimg ,result
+    return resultimg
 
 
-def inverseWaveleteTransform(img,nc,nr):
-    image=img.astype(np.int)
-    result=np.zeros((nr,nc,3), np.int)
+def inverseWaveleteTransform(img):
+    image=img.astype(np.float)
+    nr, nc= image.shape[:2]
+    result=np.zeros((nr,nc,3), np.float)
     nr2 = nr/2;
 
     for i in range(0,nr-1,2):
@@ -65,21 +69,21 @@ def inverseWaveleteTransform(img,nc,nr):
             result[i,j1] =((image[i,j2]/2) - (image[i,j2+nc2]/2))*2
 
     resultimg=result.astype(np.uint8)
-    return resultimg, result;
+    return resultimg;
 
 if __name__ == '__main__':
 
         #loadImage & copy image
         image = cv2.imread(sys.argv[1])
-        height, width= image.shape[:2]
 
-        image2, imArray2 =waveleteTransform(image,width,height)
 
-        image3, imArray3=inverseWaveleteTransform(imArray2,width,height)
+        image2 = waveleteTransform(image)
+
+        image3 = inverseWaveleteTransform(image2)
 
         cv2.imshow('base Image',image)
         cv2.imshow('DWT',image2)
-        cv2.imshow('result4',image3)
+        cv2.imshow('Inverse DWT',image3)
 
         a,ext=os.path.splitext(os.path.basename(sys.argv[1]))
         a=a+"D"

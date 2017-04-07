@@ -3,7 +3,6 @@ import gi
 from DWT2 import *
 from GLCM import *
 from PSNR import *
-from layout1 import *
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GLib
@@ -275,7 +274,6 @@ class MyWindow(Gtk.Window):
 
 if __name__ == '__main__':
     win = MyWindow()
-
     win.connect("delete-event", Gtk.main_quit)
     win.show_all()
     Gtk.main()
