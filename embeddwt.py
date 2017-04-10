@@ -2,11 +2,6 @@ from DWT2 import *
 from embed import *
 
 
-def extract(img, imgcover, alpha):
-
-    watermark = ((img.astype(np.double) -
-                  imgcover.astype(np.double)) / alpha).astype(np.uint8)
-    return watermark
 
 
 if __name__ == '__main__':

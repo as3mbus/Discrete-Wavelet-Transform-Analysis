@@ -21,9 +21,12 @@ class GLCM:
         for i in range(height):
             for j in range(width):
                 if i + self.dy in range(height) and j + self.dx in range(width):
-                    glcm[self.image[i, j, 0], self.image[i + self.dy, j + self.dx, 0], 0] += 1
-                    glcm[self.image[i, j, 1], self.image[i + self.dy, j + self.dx, 1], 1] += 1
-                    glcm[self.image[i, j, 2], self.image[i + self.dy, j + self.dx, 2], 2] += 1
+                    glcm[self.image[i, j, 0], self.image[i +
+                                                         self.dy, j + self.dx, 0], 0] += 1
+                    glcm[self.image[i, j, 1], self.image[i +
+                                                         self.dy, j + self.dx, 1], 1] += 1
+                    glcm[self.image[i, j, 2], self.image[i +
+                                                         self.dy, j + self.dx, 2], 2] += 1
                     # print str(image[i,j,0]) + " " + str(image[i+dy,j+dx,0]) + "
                     # " + str(glcm[image[i,j,0],image[i+dy,j+dx,0],0])
                     x += 1
@@ -88,6 +91,7 @@ class GLCM:
             taoI[i] = math.sqrt(taoI[i])
             taoJ[i] = math.sqrt(taoJ[i])
         return taoI, taoJ
+
     def printglcm(self):
 
         print "meanI = " + str(rgb2gs(self.meanI))
@@ -101,12 +105,10 @@ class GLCM:
 
     def writeglcm(self):
         with open("test.txt", "a") as myfile:
-            myfile.write(str(rgb2gs(self.kontras))+", "+str(rgb2gs(self.energy))+", "+str(rgb2gs(self.homogenity))+", "+str(rgb2gs(self.korelasion))+"\n")
+            myfile.write(str(rgb2gs(self.kontras)) + ", " + str(rgb2gs(self.energy)) + ", " +
+                         str(rgb2gs(self.homogenity)) + ", " + str(rgb2gs(self.korelasion)) + "\n")
         with open("type.txt", "a") as myfile:
-            myfile.write(str(1)+",\n")
-
-
-
+            myfile.write(str(1) + ",\n")
 
 
 def rgb2gs(rgb):
@@ -118,8 +120,8 @@ if __name__ == '__main__':
     image = cv2.imread(sys.argv[1])
     glcm = GLCM(image, 0, 1)
     imglcm = glcm.glcm.astype(np.uint8)
-    glcm.printglcm();
-    glcm.writeglcm();
+    glcm.printglcm()
+    glcm.writeglcm()
 
     # kontras, meanI, meanJ, energy, homogenity = contrast(glcm)
     # taoI, taoJ = tao(glcm, meanI, meanJ)
