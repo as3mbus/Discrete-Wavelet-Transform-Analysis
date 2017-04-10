@@ -21,9 +21,9 @@ class GLCM:
         for i in range(height):
             for j in range(width):
                 if i + self.dy in range(height) and j + self.dx in range(width):
-                    glcm[image[i, j, 0], image[i + self.dy, j + self.dx, 0], 0] += 1
-                    glcm[image[i, j, 1], image[i + self.dy, j + self.dx, 1], 1] += 1
-                    glcm[image[i, j, 2], image[i + self.dy, j + self.dx, 2], 2] += 1
+                    glcm[self.image[i, j, 0], self.image[i + self.dy, j + self.dx, 0], 0] += 1
+                    glcm[self.image[i, j, 1], self.image[i + self.dy, j + self.dx, 1], 1] += 1
+                    glcm[self.image[i, j, 2], self.image[i + self.dy, j + self.dx, 2], 2] += 1
                     # print str(image[i,j,0]) + " " + str(image[i+dy,j+dx,0]) + "
                     # " + str(glcm[image[i,j,0],image[i+dy,j+dx,0],0])
                     x += 1
@@ -99,6 +99,15 @@ class GLCM:
         print "Homogenitas = " + str(rgb2gs(self.homogenity))
         print "Correlation = " + str(rgb2gs(self.korelasion))
 
+    def writeglcm(self):
+        with open("test.txt", "a") as myfile:
+            myfile.write(str(rgb2gs(self.kontras))+" "+str(rgb2gs(self.energy))+" "+str(rgb2gs(self.homogenity))+" "+str(rgb2gs(self.korelasion))+"\n")
+        with open("type.txt", "a") as myfile:
+            myfile.write(str(1)+"\n")
+
+
+
+
 
 def rgb2gs(rgb):
     val = 0.114 * (rgb[0]) + 0.587 * (rgb[1]) + 0.299 * (rgb[2])
@@ -110,6 +119,8 @@ if __name__ == '__main__':
     glcm = GLCM(image, 0, 1)
     imglcm = glcm.glcm.astype(np.uint8)
     glcm.printglcm();
+    glcm.writeglcm();
+
     # kontras, meanI, meanJ, energy, homogenity = contrast(glcm)
     # taoI, taoJ = tao(glcm, meanI, meanJ)
     # korelasion = correlation(glcm, meanI, meanJ, taoI, taoJ)
