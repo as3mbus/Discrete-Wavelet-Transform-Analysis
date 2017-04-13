@@ -54,24 +54,23 @@ def embed(imArray, imWater, x, y, w, h, alpha):
     resultImgArray = imArray.astype(np.uint8)
     imArray = imArray.astype(np.uint8)
     imWater = imWater.astype(np.uint8)
-    cv2.waitKey(0)
     return resultImgArray
 
 def extract(img, imgcover, alpha):
 
     watermark = ((img.astype(np.double) -
                   imgcover.astype(np.double)) / alpha).astype(np.uint8)
-    return watermark    
+    return watermark
 
 if __name__ == '__main__':
     image = cv2.imread(
-        "/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/Picture1.png")
+        "/home/as3mbus/Screenshot_2017-04-09_22-30-51.png")
     imageWater = cv2.imread(
-        "/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/gambar.jpg")
+        "/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/tes.jpeg")
     height, width = image.shape[:2]
     print "A"
     # imWater = cv2.resize(imageWater,(0,0), fx = float(height/200), fy = float(height/200))
-    resultWater = embed(image, imageWater, 100, 0, 50, 120)
+    resultWater = embed(image, imageWater, 0, 0, 500, 500,0.5)
     # cv2.imshow("ori", imageWater)
     cv2.imshow("resiz", resultWater)
     cv2.waitKey(0)

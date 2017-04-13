@@ -22,7 +22,7 @@ def mse(image1, image2):
     return mse, 10 * np.log10(math.pow(255, 2) / mse)
 
 
-def psnrrgb2gs(rgb):
+def rgb2gs(rgb):
     val = 0.114 * (rgb[0]) + 0.587 * (rgb[1]) + 0.299 * (rgb[2])
     return val
 

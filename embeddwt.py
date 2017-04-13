@@ -10,13 +10,13 @@ if __name__ == '__main__':
     imgOriginalDWT = waveleteTransform(imgOriginal)
     height, width = imgOriginal.shape[:2]
     imgWatermark = cv2.imread(
-        "/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/index.jpeg")
-    imgWatermark = cv2.resize(imgWatermark, (width, height))
-    imgWatermarkDWT = waveleteTransform(imgWatermark)
-    imgWatermarkDWTLL = imgWatermarkDWT[0:height / 2, 0:width / 2]
-    alpha = 0.007
+        "/media/DATA/UDINUS/SMT 6/Advanced Image Processing/Project/tes.jpeg")
+    # imgWatermark = cv2.resize(imgWatermark, (width, height))
+    # imgWatermarkDWT = waveleteTransform(imgWatermark)
+    # imgWatermarkDWTLL = imgWatermarkDWT[0:height / 2, 0:width / 2]
+    alpha = 0.004
     imgWatermarkedDWT = embed(
-        imgOriginalDWT, imgWatermarkDWTLL, 0, 0, width / 2, height / 2, alpha)
+        imgOriginalDWT, imgWatermark, 0, 0, width / 2, height / 2, alpha)
     imgWatermarked = inverseWaveleteTransform(imgWatermarkedDWT)
     imgWatermarkedDDWT = waveleteTransform(imgWatermarked)
     watermark = extract(imgWatermarkedDDWT[0:height / 2, 0:width / 2],
