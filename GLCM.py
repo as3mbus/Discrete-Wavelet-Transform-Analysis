@@ -105,8 +105,8 @@ class GLCM:
 
     def writeglcm(self):
         with open("test.txt", "a") as myfile:
-            myfile.write(str(rgb2gs(self.kontras)) + ", " + str(rgb2gs(self.energy)) + ", " +
-                         str(rgb2gs(self.homogenity)) + ", " + str(rgb2gs(self.korelasion)) + "\n")
+            myfile.write(str(rgb2gs(self.kontras)) + " " + str(rgb2gs(self.energy)) + " " +
+                         str(rgb2gs(self.homogenity)) + " " + str(rgb2gs(self.korelasion)) + "\n")
         with open("type.txt", "a") as myfile:
             myfile.write(str(1) + ",\n")
 

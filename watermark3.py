@@ -24,17 +24,17 @@ class Watermark:
     # which can be useful for debugging. The 'object' if you remember is the signal
     # class we picked from GtkObject.
     def on_window1_destroy(self, object, data=None):
-        print "quit with cancel"
+        print ("quit with cancel")
         Gtk.main_quit()
 
 # This is the same as above but for our menu item.
     def on_gtk_quit_activate(self, menuitem, data=None):
-        print "quit from menu"
+        print ("quit from menu")
         Gtk.main_quit()
 
 # This is our init part where we connect the signals
     def __init__(self):
-        self.gladefile = "WatermarkResize.glade"  # store the file name
+        self.gladefile = "Watermark.glade"  # store the file name
         self.builder = Gtk.Builder()  # create an instance of the gtk.Builder
         # add the xml file to the Builder
         self.builder.add_from_file(self.gladefile)
@@ -105,14 +105,14 @@ class Watermark:
     def embedWatermark(self, widget):
 
         ImageOriginal = cv2.imread(self.EntryOriginal.get_text())
-        print "sedang DWT"
+        print ("sedang DWT")
         ImageOriginalDWT = waveleteTransform(ImageOriginal)
         height, width = ImageOriginal.shape[:2]
         ImageWatermark = cv2.imread(self.EntryWatermark.get_text())
         waterHeight, waterWidth = ImageWatermark.shape[:2]
         if width / 2 < waterWidth or height / 2 < waterHeight:
             if waterHeight > waterWidth:
-                print waterHeight / (height / 2)
+                print (waterHeight / (height / 2))
                 ImageWatermark = cv2.resize(ImageWatermark, (0, 0), fx=float(
                     height) / 2 / waterHeight, fy=float(height) / 2 / waterHeight)
             else:
@@ -120,18 +120,18 @@ class Watermark:
                 # str(float(w)/waterWidth)
                 ImageWatermark = cv2.resize(ImageWatermark, (0, 0), fx=float(width) / 2 / waterWidth, fy = float(width) / 2 / waterWidth)
         waterHeight, waterWidth=ImageWatermark.shape[:2]
-        print "sedang embedding"
+        print("sedang embedding")
         alpha=float(self.builder.get_object("EntryIntensity").get_text())
-        print alpha
+        print(alpha)
         ImageWatermarkedDWT=embed(ImageOriginalDWT, ImageWatermark, 0, 0, waterWidth, waterHeight, alpha)
-        print "sedang embedding2"
+        print("sedang embedding2")
         ImageWatermarked=inverseWaveleteTransform(ImageWatermarkedDWT)
-        print "sedang ekstrak1"
+        print ("sedang ekstrak1")
         imageWatermarkedDDWT=waveleteTransform(ImageWatermarked)
-        print "sedang Ekstrak2"
+        print ("sedang Ekstrak2")
         ImageExtract=extract(imageWatermarkedDDWT[0:waterHeight, 0:waterWidth],
                             ImageOriginalDWT[0:waterHeight, 0:waterWidth], alpha)
-        print "sedang nyetak"
+        print ("sedang nyetak")
         cv2.imwrite("/tmp/ImageOriginal.jpeg",ImageOriginal)
         cv2.imwrite("/tmp/ImageWatermarked.jpeg",ImageWatermarked)
         cv2.imwrite("/tmp/ImageWatermark.jpeg",ImageWatermark)

@@ -11,6 +11,8 @@ from embed import *
 from WatermarkComparison import *
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+from gi.repository import GdkPixbuf
+Gdk.threads_init()
 from gi.repository import GLib
 
 # print pygtk._get_available_versions()
@@ -24,7 +26,7 @@ class Watermark:
     # which can be useful for debugging. The 'object' if you remember is the signal
     # class we picked from GtkObject.
     def on_window1_destroy(self, object, data=None):
-        print "quit with cancel"
+        print ("quit with cancel")
         Gtk.main_quit()
 
 # This is the same as above but for our menu item.
@@ -51,6 +53,7 @@ class Watermark:
 
         self.builder.get_object("BtnOriginal").connect(
             "clicked", self.loadOriginal)
+        self.BoxOriginal = self.builder.get_object("BoxOriginal")
         self.ImageOriginal = self.builder.get_object("ImageOriginal")
         self.EntryOriginal = self.builder.get_object("EntryOriginal")
         self.ImageWatermark = self.builder.get_object("ImageWatermark")
@@ -61,14 +64,36 @@ class Watermark:
             "clicked", self.embedWatermark)
 
     def loadOriginal(self, widget):
-        dialog = Gtk.FileChooserDialog("Pilih Gambar ", self.window, Gtk.FileChooserAction.OPEN, (
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        dialog = Gtk.FileChooserDialog("Pilih Gambar ", self.window, Gtk.FileChooserAction.OPEN,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         self.add_filters(dialog)
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             self.EntryOriginal.set_text(dialog.get_filename())
-            self.ImageOriginal.set_from_file(dialog.get_filename())
-            self.window.resize(400, 200)
+
+            allocation = self.BoxOriginal.get_allocation()
+            desired_width = 400
+            desired_height = 500
+
+
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(dialog.get_filename())
+            pixbuf_width  = (float) (pixbuf.get_width())
+            pixbuf_height = (float) (pixbuf.get_height())
+            if desired_width < pixbuf_width or desired_height < pixbuf_height:
+                if pixbuf_height > pixbuf_width:
+                    target_scale  = desired_height/pixbuf_height
+                    target_width  = (int) (pixbuf_width *  target_scale)
+                    target_height = (int) (pixbuf_height * target_scale)
+                else:
+                    target_scale  = desired_width/pixbuf_width
+                    target_width  = (int) (pixbuf_width * target_scale)
+                    target_height = (int) (pixbuf_height * target_scale)
+                    # print  str(w) + "/" + str(waterWidth) +" = "+
+                    # str(float(w)/waterWidth)
+                print(str(pixbuf_width)+ " * () " +str(desired_width)+ "/"+str(pixbuf_width) )
+                pixbuf = pixbuf.scale_simple(target_width, target_height, GdkPixbuf.InterpType.BILINEAR)
+                # pixbuf = pixbuf.scale(0,0,target_width, target_height,0,0,target_scale,target_scale, GdkPixbuf.InterpType.BILINEAR)
+            self.ImageOriginal.set_from_pixbuf(pixbuf)
             self.window.set_gravity(Gdk.Gravity.CENTER)
             print("File Selected", dialog.get_filename())
         elif response == Gtk.ResponseType.CANCEL:
@@ -83,8 +108,29 @@ class Watermark:
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             self.EntryWatermark.set_text(dialog.get_filename())
-            self.ImageWatermark.set_from_file(dialog.get_filename())
-            self.window.resize(400, 200)
+            allocation = self.ImageWatermark.get_allocation()
+            desired_width = allocation.width
+            desired_height = allocation.height
+
+
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(dialog.get_filename())
+            pixbuf_width=pixbuf.get_width()
+            pixbuf_height=pixbuf.get_height()
+            if desired_width < pixbuf_width or desired_height < pixbuf_height:
+                if pixbuf_height > pixbuf_width:
+                    target_width  = pixbuf_width * (desired_height/pixbuf_height)
+                    target_height = pixbuf_height * (desired_height/pixbuf_height)
+                    target_scale  = (desired_height/pixbuf_height)
+                else:
+                    target_width  = pixbuf_width * (desired_width/pixbuf_width)
+                    target_height = pixbuf_height * (desired_width/pixbuf_width)
+                    target_scale  = (desired_width/pixbuf_width)
+                    # print  str(w) + "/" + str(waterWidth) +" = "+
+                    # str(float(w)/waterWidth)
+                # pixbuf = pixbuf.scale_simple(target_width, target_height, GdkPixbuf.InterpType.BILINEAR)
+                pixbuf = pixbuf.scale(0,0,target_width, target_height,0,0,target_scale,target_scale, GdkPixbuf.InterpType.BILINEAR)
+                # print(str(target_width)+ " " +str(target_height) )
+            self.ImageWatermark.set_from_pixbuf(pixbuf)
             print("File Selected", dialog.get_filename())
         elif response == Gtk.ResponseType.NORTH:
             print("Cancel clicked")

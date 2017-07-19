@@ -17,11 +17,12 @@ def waveleteTransform(img):
 
         for j in range(0, width - 1, 2):
 
-            j1 = j + 1
-            j2 = j / 2
+            j1 = (int) (j + 1)
+            j2 = (int) (j / 2)
+            width3 = (int) (width2 + j2)
 
-            result[i, j2] = (image[i, j] + image[i, j1]) / 2
-            result[i, width2 + j2] = (image[i, j] - image[i, j1]) / 2
+            result[i, j2] = (( image[i, j] + image[i, j1] ) / 2)
+            result[i, width3] = ((image[i, j] - image[i, j1]) / 2)
 
     # copy array
     image = np.copy(result)
@@ -31,11 +32,12 @@ def waveleteTransform(img):
     for i in range(0, height - 1, 2):
         for j in range(0, width):
 
-            i1 = i + 1
-            i2 = i / 2
+            i1 = (int) (i + 1)
+            i2 = (int) (i / 2)
+            height3 = (int) (height2 + i2)
 
             result[i2, j] = (image[i, j] + image[i1, j]) / 2
-            result[height2 + i2, j] = (image[i, j] - image[i1, j]) / 2
+            result[height3, j] = (image[i, j] - image[i1, j]) / 2
     resultimg = result.astype(np.uint8)
     return resultimg
 
@@ -49,11 +51,12 @@ def inverseWaveleteTransform(img):
     for i in range(0, nr - 1, 2):
         for j in range(0, nc):
 
-            i1 = i + 1
-            i2 = i / 2
+            i1 = (int) (i + 1)
+            i2 = (int) (i / 2)
+            nr3 = (int) (nr2 + i2)
 
-            result[i, j] = ((image[i2, j] / 2) + (image[nr2 + i2, j] / 2)) * 2
-            result[i1, j] = ((image[i2, j] / 2) - (image[nr2 + i2, j] / 2)) * 2
+            result[i, j] = ((image[i2, j] / 2) + (image[nr3, j] / 2)) * 2
+            result[i1, j] = ((image[i2, j] / 2) - (image[nr3, j] / 2)) * 2
 
     # //copy array
     image = np.copy(result)
@@ -63,10 +66,11 @@ def inverseWaveleteTransform(img):
     for i in range(0, nr):
         for j in range(0, nc - 1, 2):
 
-            j1 = j + 1
-            j2 = j / 2
-            result[i, j] = ((image[i, j2] / 2) + (image[i, j2 + nc2] / 2)) * 2
-            result[i, j1] = ((image[i, j2] / 2) - (image[i, j2 + nc2] / 2)) * 2
+            j1 = (int) (j + 1)
+            j2 = (int) (j / 2)
+            nc3 = (int) (j2 + nc2)
+            result[i, j] = ((image[i, j2] / 2) + (image[i, nc3] / 2)) * 2
+            result[i, j1] = ((image[i, j2] / 2) - (image[i, nc3] / 2)) * 2
 
     resultimg = result.astype(np.uint8)
     return resultimg
